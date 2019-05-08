@@ -4,12 +4,20 @@ public class CreatureManager{
     int creaturesAtStart;
     int width;
     int length;
-    public CreatureManager(int cas,int w, int l){
+    Display dis;
+    public CreatureManager(int cas,int w, int l, Display d){
+        dis=d;
         creatures = new ArrayList<Creature>();
         creaturesAtStart = cas;
         width = w;
         length = l;
         resetCreatures();
+        ArrayList<Organism> temporgs = new ArrayList<Organism>();
+        for(Creature c : creatures) {
+            temporgs.add(new Organism(c.loc[0],c.loc[1],c.color));
+        }
+        dis.setOrganism(temporgs);
+        dis.redraw();
     }
     public void resetCreatures(){
         for(int a = 0; a < creaturesAtStart; a++){

@@ -18,6 +18,7 @@ public class Environment{
         length = l;
         foodAtStart = fas;
         creatureManager = cm;
+        foodLocs = new ArrayList<int[]>();
         resetBoard();
     }
     public boolean foodLocContains(int[] check){
@@ -36,7 +37,7 @@ public class Environment{
                 x = (int)(Math.random()*(width+1));
                 z = (int)(Math.random()*(length+1));
             }
-            foodLocs.add(new int[]{});
+            foodLocs.add(new int[]{x,z});
         }
     }
     public void updateFood(){
@@ -47,7 +48,7 @@ public class Environment{
                 x = (int)(Math.random()*(width+1));
                 z = (int)(Math.random()*(length+1));
             }
-            foodLocs.add(new int[]{});
+            foodLocs.add(new int[]{x,z});
         }
     }
 }

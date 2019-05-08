@@ -16,6 +16,7 @@ public class Display extends JComponent{
     private final int WIDTH = 1920;
     private final int HEIGHT = 1080;
     private final int groundheight = 4;
+    private double degrees = 0;
     public Display(int xl, int yl, Color gc){
         organisms = new ArrayList<Organism>();
         xlen=xl;
@@ -32,8 +33,14 @@ public class Display extends JComponent{
     }   
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+        degrees+=.005;
+        
         
         ArrayList<ZObject> screenobjects = new ArrayList<ZObject>();
+        
+        ZObject ground = new ZObject(gp2,gp1,gp3,gp4,groundColor);
+        screenobjects.add(ground);
+        
         
         //create cubes corresponding to each object
         ArrayList<Cube> orgcubes = new ArrayList<Cube>();
@@ -47,8 +54,7 @@ public class Display extends JComponent{
         
         //create ground plane
         
-        ZObject ground = new ZObject(gp2,gp1,gp3,gp4,groundColor);
-        screenobjects.add(ground);
+        
         
         //rotate map and raise camera
         
@@ -66,7 +72,10 @@ public class Display extends JComponent{
         
         //project and actually display points
         
+        screenobjects = spinCamera(degrees, screenobjects);
         screenobjects = ZBuffer.sortZ(screenobjects);
+        
+        
         
         for(ZObject z : screenobjects) {
             if (z.getType().equals("Polygon")) {
@@ -100,7 +109,7 @@ public class Display extends JComponent{
         
         //display variable and debug text on screen
         
-                
+        redraw();
     }
     public void setOrganism(ArrayList<Organism> ao) {
         organisms=ao;
@@ -137,6 +146,34 @@ public class Display extends JComponent{
                 OtherPoint dpone = new OtherPoint(oreturned[0],oreturned[1],oreturned[2]);
                 OtherPoint dptwo = new OtherPoint(twreturned[0],twreturned[1],twreturned[2]);
                 OtherPoint dpthree = new OtherPoint(trreturned[0],trreturned[1],trreturned[2]);
+                tempzobj.add(new ZObject(dpone,dptwo,dpthree,zo.getColor()));
+            }
+        }
+        return tempzobj;
+    }
+    public ArrayList<ZObject> spinCamera(double deg, ArrayList<ZObject> objects) {
+        double ydist=deg;
+        double xdist=5;
+        double zdist=20;
+        ArrayList<ZObject> tempzobj = new ArrayList<ZObject>();
+        for(ZObject zo : objects) {
+            if (zo.getType().equals("Quad")) {
+                double[] oreturned = Calculate.rotateDouble(new double[]{zo.getOne().getX()+xdist,zo.getOne().getY(),zo.getOne().getZ()-zdist,1}, 'y', deg);            
+                double[] twreturned = Calculate.rotateDouble(new double[]{zo.getTwo().getX()+xdist,zo.getTwo().getY(),zo.getTwo().getZ()-zdist,1}, 'y', deg);
+                double[] trreturned = Calculate.rotateDouble(new double[]{zo.getThree().getX()+xdist,zo.getThree().getY(),zo.getThree().getZ()-zdist,1}, 'y', deg);   
+                double[] freturned = Calculate.rotateDouble(new double[]{zo.getFour().getX()+xdist,zo.getFour().getY(),zo.getFour().getZ()-zdist,1}, 'y', deg);
+                OtherPoint dpone = new OtherPoint(oreturned[0]-xdist,oreturned[1],oreturned[2]+zdist);
+                OtherPoint dptwo = new OtherPoint(twreturned[0]-xdist,twreturned[1],twreturned[2]+zdist);
+                OtherPoint dpthree = new OtherPoint(trreturned[0]-xdist,trreturned[1],trreturned[2]+zdist);
+                OtherPoint dpfour = new OtherPoint(freturned[0]-xdist,freturned[1],freturned[2]+zdist);
+                tempzobj.add(new ZObject(dpone,dptwo,dpthree,dpfour,zo.getColor(),zo.isTouched()));
+            } else if (zo.getType().equals("Polygon")) {
+                double[] oreturned = Calculate.rotateDouble(new double[]{zo.getOne().getX()+xdist,zo.getOne().getY(),zo.getOne().getZ()-zdist,1}, 'y', deg);            
+                double[] twreturned = Calculate.rotateDouble(new double[]{zo.getTwo().getX()+xdist,zo.getTwo().getY(),zo.getTwo().getZ()-zdist,1}, 'y', deg);
+                double[] trreturned = Calculate.rotateDouble(new double[]{zo.getThree().getX()+xdist,zo.getThree().getY(),zo.getThree().getZ()-zdist,1}, 'y', deg);   
+                OtherPoint dpone = new OtherPoint(oreturned[0]-xdist,oreturned[1],oreturned[2]+zdist);
+                OtherPoint dptwo = new OtherPoint(twreturned[0]-xdist,twreturned[1],twreturned[2]+zdist);
+                OtherPoint dpthree = new OtherPoint(trreturned[0]-xdist,trreturned[1],trreturned[2]+zdist);
                 tempzobj.add(new ZObject(dpone,dptwo,dpthree,zo.getColor()));
             }
         }
