@@ -15,6 +15,7 @@ public class Creature{
         damage = d;
         fear = f;
         loc = l;
+        tempResistance = tr;
         color = calulateColor();
     }
     public Color calulateColor(){

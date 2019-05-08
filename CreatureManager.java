@@ -27,7 +27,7 @@ public class CreatureManager{
                 x = (int)(Math.random()*(width));
                 z = (int)(Math.random()*(length));
             }
-            creatures.add(new Creature(0.3,0.4,5,0.2,new int[]{x,z},0.3));
+            creatures.add(new Creature(Math.random(),Math.random(),5,Math.random(),new int[]{x,z},Math.random()));
         }
     }
     public boolean contains(int[] check){
