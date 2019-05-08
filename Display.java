@@ -39,7 +39,7 @@ public class Display extends JComponent{
         ArrayList<ZObject> screenobjects = new ArrayList<ZObject>();
         
         ZObject ground = new ZObject(gp2,gp1,gp3,gp4,groundColor);
-        screenobjects.add(ground);
+        //screenobjects.add(ground);
         
         
         //create cubes corresponding to each object
@@ -75,7 +75,16 @@ public class Display extends JComponent{
         screenobjects = spinCamera(degrees, screenobjects);
         screenobjects = ZBuffer.sortZ(screenobjects);
         
-        
+        ArrayList<ZObject> withground = new ArrayList<ZObject>();
+        withground.add(ground);
+        withground = MoveCamera(withground, 'z', (int)(ylen));
+        withground = MoveCamera(withground, 'x', -10);
+        withground = MoveCamera(withground, 'y', 5);
+        withground = spinCamera(degrees, withground);
+        for(ZObject z : screenobjects) {
+            withground.add(z);
+        }
+        screenobjects=withground;
         
         for(ZObject z : screenobjects) {
             if (z.getType().equals("Polygon")) {
