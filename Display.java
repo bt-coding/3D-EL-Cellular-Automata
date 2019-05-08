@@ -153,8 +153,8 @@ public class Display extends JComponent{
     }
     public ArrayList<ZObject> spinCamera(double deg, ArrayList<ZObject> objects) {
         double ydist=deg;
-        double xdist=5;
-        double zdist=20;
+        double xdist=(int)(xlen/2)-10;
+        double zdist=(int)(ylen/2)+20;
         ArrayList<ZObject> tempzobj = new ArrayList<ZObject>();
         for(ZObject zo : objects) {
             if (zo.getType().equals("Quad")) {
