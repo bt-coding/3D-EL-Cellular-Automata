@@ -12,8 +12,8 @@ public class DisplayTest {
         frame.add(d);
         d.setVisible(true);
         ArrayList<Organism> organismsample = new ArrayList<Organism>();
-        for(int i=0;i<10;i++) {
-            for(int i2=0;i2<10;i2++) {
+        for(int i=0;i<20;i++) {
+            for(int i2=0;i2<20;i2++) {
                 organismsample.add(new Organism(i,i2,new Color((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()))));
             }
         }

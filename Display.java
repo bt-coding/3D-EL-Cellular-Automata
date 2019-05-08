@@ -66,7 +66,7 @@ public class Display extends JComponent{
             }
         }*/
         
-        screenobjects = MoveCamera(screenobjects, 'z', 20);
+        screenobjects = MoveCamera(screenobjects, 'z', (int)(ylen));
         screenobjects = MoveCamera(screenobjects, 'x', -10);
         screenobjects = MoveCamera(screenobjects, 'y', 5);
         
