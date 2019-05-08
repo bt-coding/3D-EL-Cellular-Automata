@@ -21,11 +21,11 @@ public class CreatureManager{
     }
     public void resetCreatures(){
         for(int a = 0; a < creaturesAtStart; a++){
-            int x = (int)(Math.random()*(width+1));
-            int z = (int)(Math.random()*(length+1));
+            int x = (int)(Math.random()*(width));
+            int z = (int)(Math.random()*(length));
             while(contains(new int[]{x,z})){
-                x = (int)(Math.random()*(width+1));
-                z = (int)(Math.random()*(length+1));
+                x = (int)(Math.random()*(width));
+                z = (int)(Math.random()*(length));
             }
             creatures.add(new Creature(0.3,0.4,5,0.2,new int[]{x,z},0.3));
         }
