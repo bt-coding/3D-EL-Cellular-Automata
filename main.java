@@ -7,7 +7,7 @@ public class main{
         frame.add(screen);
         int planeWidth = 20; 
         int planeLength = 20;
-        int creaturesAtStart = 10;
+        int creaturesAtStart = 50;
         int environmentTemp = 60;
         int foodPerUpdate = 5;
         int foodWorth = 1;
