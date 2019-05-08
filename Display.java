@@ -17,6 +17,8 @@ public class Display extends JComponent{
     private final int HEIGHT = 1080;
     private final int groundheight = 4;
     private double degrees = 0;
+    private ArrayList<ZObject> screenobjects;
+    private ArrayList<ZObject> grnd;
     public Display(int xl, int yl, Color gc){
         organisms = new ArrayList<Organism>();
         xlen=xl;
@@ -27,30 +29,40 @@ public class Display extends JComponent{
         gp2 = new OtherPoint(xlen,groundheight,0);
         gp3 = new OtherPoint(0,groundheight,ylen);
         gp4 = new OtherPoint(xlen,groundheight,ylen);
+        screenobjects = new ArrayList<ZObject>();
+        grnd = new ArrayList<ZObject>();
+        ZObject ground = new ZObject(gp2,gp1,gp3,gp4,groundColor);
+        grnd.add(ground);
+        grnd = MoveCamera(grnd, 'z', (int)(ylen));
+        grnd = MoveCamera(grnd, 'x', -10);
+        grnd = MoveCamera(grnd, 'y', 5);
+        
+        (new Thread(new FrameThread(60,this))).start();
     }
     public void redraw(){
         super.repaint();
     }   
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+        //degrees+=.005;
         degrees+=.005;
         
+        //ArrayList<ZObject> screenobjects = new ArrayList<ZObject>();
         
-        ArrayList<ZObject> screenobjects = new ArrayList<ZObject>();
         
-        ZObject ground = new ZObject(gp2,gp1,gp3,gp4,groundColor);
         //screenobjects.add(ground);
         
         
         //create cubes corresponding to each object
-        ArrayList<Cube> orgcubes = new ArrayList<Cube>();
-        for(Organism o : organisms) {
+        //ArrayList<Cube> orgcubes = new ArrayList<Cube>();
+        /*for(Organism o : organisms) {
             Cube c = Shapes.genCube(o.getX(), groundheight-1, o.getY(), o.getColor());
             for(ZObject z : c.getZObjects()) {
                 screenobjects.add(z);
             }
             orgcubes.add(c);
-        } //Organisms use X and Y, but the Y is actually considered to be Z when in 3D
+        }*/
+        //Organisms use X and Y, but the Y is actually considered to be Z when in 3D
         
         //create ground plane
         
@@ -66,16 +78,14 @@ public class Display extends JComponent{
             }
         }*/
         
-        screenobjects = MoveCamera(screenobjects, 'z', (int)(ylen));
-        screenobjects = MoveCamera(screenobjects, 'x', -10);
-        screenobjects = MoveCamera(screenobjects, 'y', 5);
+        
         
         //project and actually display points
         
-        screenobjects = spinCamera(degrees, screenobjects);
+        ArrayList<ZObject> onscreen = spinCamera(degrees, screenobjects);
         screenobjects = ZBuffer.sortZ(screenobjects);
         
-        ArrayList<ZObject> withground = new ArrayList<ZObject>();
+        /*ArrayList<ZObject> withground = new ArrayList<ZObject>();
         withground.add(ground);
         withground = MoveCamera(withground, 'z', (int)(ylen));
         withground = MoveCamera(withground, 'x', -10);
@@ -85,8 +95,32 @@ public class Display extends JComponent{
             withground.add(z);
         }
         screenobjects=withground;
+        */
+        ArrayList<ZObject> grnarr = spinCamera(degrees, grnd);
+        ZObject ground = grnarr.get(0);
         
-        for(ZObject z : screenobjects) {
+        double[] oneprojg = Calculate.project2Ddouble(new double[]{ground.getQuad().getOne().getX(),ground.getQuad().getOne().getY(),ground.getQuad().getOne().getSpecialZ(),1},FOV,ASPECT,0.0,100.0);
+        double[] twoprojg = Calculate.project2Ddouble(new double[]{ground.getQuad().getTwo().getX(),ground.getQuad().getTwo().getY(),ground.getQuad().getTwo().getSpecialZ(),1},FOV,ASPECT,0.0,100.0);
+        double[] threeprojg = Calculate.project2Ddouble(new double[]{ground.getQuad().getThree().getX(),ground.getQuad().getThree().getY(),ground.getQuad().getThree().getSpecialZ(),1},FOV,ASPECT,5.0,100.0);     
+        double[] fourprojg = Calculate.project2Ddouble(new double[]{ground.getQuad().getFour().getX(),ground.getQuad().getFour().getY(),ground.getQuad().getFour().getSpecialZ(),1},FOV,ASPECT,5.0,100.0);
+        int[] xpg = new int[]{(int)(WIDTH*oneprojg[0]),(int)(WIDTH*twoprojg[0]),(int)(WIDTH*threeprojg[0]),(int)(WIDTH*fourprojg[0])};
+        int[] ypg = new int[]{(int)(HEIGHT*oneprojg[1]),(int)(HEIGHT*twoprojg[1]),(int)(HEIGHT*threeprojg[1]),(int)(HEIGHT*fourprojg[1])};
+        //g.setColor(z.getQuad().getColor());
+        Graphics2D g2g=(Graphics2D)(g);
+        g2g.setPaint(new GradientPaint(WIDTH/2,HEIGHT,new Color(255,255,255,200),WIDTH/2, HEIGHT/2,ground.getQuad().getColor()));
+        //java.awt.Polygon p = new java.awt.Polygon();
+        //g.fillPolygon(xp,yp,4);
+        g2g.fill(new java.awt.Polygon(xpg,ypg,4));
+        Color w2g = new Color(255,255,255,20);
+        Color z2g = new Color(ground.getQuad().getColor().getRed(),ground.getQuad().getColor().getGreen(),ground.getQuad().getColor().getBlue(),20);
+        g2g.setPaint(new GradientPaint(WIDTH/2,HEIGHT,w2g,WIDTH/2, 0,z2g));
+        g2g.draw(new java.awt.Polygon(xpg,ypg,4));
+        
+        
+        
+        
+        
+        for(ZObject z : onscreen) {
             if (z.getType().equals("Polygon")) {
                 double[] oneproj = Calculate.project2Ddouble(new double[]{z.getPolygon().getOne().getX(),z.getPolygon().getOne().getY(),z.getPolygon().getOne().getSpecialZ(),1},FOV,ASPECT,0.0,100.0);
                 double[] twoproj = Calculate.project2Ddouble(new double[]{z.getPolygon().getTwo().getX(),z.getPolygon().getTwo().getY(),z.getPolygon().getTwo().getSpecialZ(),1},FOV,ASPECT,0.0,100.0);
@@ -113,15 +147,23 @@ public class Display extends JComponent{
                 g2.setPaint(new GradientPaint(WIDTH/2,HEIGHT,w2,WIDTH/2, 0,z2));
                 g2.draw(new java.awt.Polygon(xp,yp,4));
             }
-            
         }
         
         //display variable and debug text on screen
         
-        redraw();
     }
     public void setOrganism(ArrayList<Organism> ao) {
         organisms=ao;
+        screenobjects = new ArrayList<ZObject>();
+        for(Organism o : ao) {
+            ArrayList<ZObject> objs = Shapes.genCubeQuads(o.getX(), groundheight-1, o.getY(), o.getColor());
+            for(ZObject z : objs) {
+                screenobjects.add(z);
+            }
+        }
+        screenobjects = MoveCamera(screenobjects, 'z', (int)(ylen));
+        screenobjects = MoveCamera(screenobjects, 'x', -10);
+        screenobjects = MoveCamera(screenobjects, 'y', 5);
     }
     public ArrayList<ZObject> MoveCamera(ArrayList<ZObject> objects, char dir, double dis) {
         ArrayList<ZObject> tempzobj = new ArrayList<ZObject>();
