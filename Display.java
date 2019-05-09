@@ -34,7 +34,7 @@ public class Display extends JComponent{
         ZObject ground = new ZObject(gp2,gp1,gp3,gp4,groundColor);
         grnd.add(ground);
         grnd = MoveCamera(grnd, 'z', (int)(ylen));
-        grnd = MoveCamera(grnd, 'x', -10);
+        grnd = MoveCamera(grnd, 'x', -(int)(xlen/2));
         grnd = MoveCamera(grnd, 'y', 5);
         
         (new Thread(new FrameThread(60,this))).start();
@@ -83,7 +83,7 @@ public class Display extends JComponent{
         //project and actually display points
         
         ArrayList<ZObject> onscreen = spinCamera(degrees, screenobjects);
-        screenobjects = ZBuffer.sortZ(screenobjects);
+        onscreen = ZBuffer.sortZ(onscreen);
         
         /*ArrayList<ZObject> withground = new ArrayList<ZObject>();
         withground.add(ground);
@@ -136,16 +136,8 @@ public class Display extends JComponent{
                 double[] fourproj = Calculate.project2Ddouble(new double[]{z.getQuad().getFour().getX(),z.getQuad().getFour().getY(),z.getQuad().getFour().getSpecialZ(),1},FOV,ASPECT,5.0,100.0);
                 int[] xp = new int[]{(int)(WIDTH*oneproj[0]),(int)(WIDTH*twoproj[0]),(int)(WIDTH*threeproj[0]),(int)(WIDTH*fourproj[0])};
                 int[] yp = new int[]{(int)(HEIGHT*oneproj[1]),(int)(HEIGHT*twoproj[1]),(int)(HEIGHT*threeproj[1]),(int)(HEIGHT*fourproj[1])};
-                //g.setColor(z.getQuad().getColor());
-                Graphics2D g2=(Graphics2D)(g);
-                g2.setPaint(new GradientPaint(WIDTH/2,HEIGHT,new Color(255,255,255,200),WIDTH/2, HEIGHT/2,z.getQuad().getColor()));
-                //java.awt.Polygon p = new java.awt.Polygon();
-                //g.fillPolygon(xp,yp,4);
-                g2.fill(new java.awt.Polygon(xp,yp,4));
-                Color w2 = new Color(255,255,255,20);
-                Color z2 = new Color(z.getQuad().getColor().getRed(),z.getQuad().getColor().getGreen(),z.getQuad().getColor().getBlue(),20);
-                g2.setPaint(new GradientPaint(WIDTH/2,HEIGHT,w2,WIDTH/2, 0,z2));
-                g2.draw(new java.awt.Polygon(xp,yp,4));
+                g.setColor(z.getQuad().getColor());
+                g.fillPolygon(xp,yp,4);
             }
         }
         
@@ -162,7 +154,7 @@ public class Display extends JComponent{
             }
         }
         screenobjects = MoveCamera(screenobjects, 'z', (int)(ylen));
-        screenobjects = MoveCamera(screenobjects, 'x', -10);
+        screenobjects = MoveCamera(screenobjects, 'x', -(int)(xlen/2));
         screenobjects = MoveCamera(screenobjects, 'y', 5);
     }
     public ArrayList<ZObject> MoveCamera(ArrayList<ZObject> objects, char dir, double dis) {
@@ -204,8 +196,9 @@ public class Display extends JComponent{
     }
     public ArrayList<ZObject> spinCamera(double deg, ArrayList<ZObject> objects) {
         double ydist=deg;
-        double xdist=(int)(xlen/2)-10;
-        double zdist=(int)(ylen/2)+20;
+        //uble xdist=(int)(xlen/2)-10;
+        double xdist=0;
+        double zdist=(int)(ylen/2)+ylen;
         ArrayList<ZObject> tempzobj = new ArrayList<ZObject>();
         for(ZObject zo : objects) {
             if (zo.getType().equals("Quad")) {

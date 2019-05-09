@@ -56,12 +56,12 @@ public class Shapes {
         points.add(new OtherPoint(x+1,y+1,z+1));
         
         ArrayList<ZObject> quads = new ArrayList<ZObject>();
-        quads.add(new ZObject(points.get(0),points.get(1),points.get(4),points.get(5),co));
-        quads.add(new ZObject(points.get(1),points.get(3),points.get(5),points.get(7),co));
-        quads.add(new ZObject(points.get(4),points.get(5),points.get(6),points.get(7),co));
-        quads.add(new ZObject(points.get(0),points.get(2),points.get(4),points.get(6),co));
-        quads.add(new ZObject(points.get(0),points.get(1),points.get(2),points.get(3),co));
-        quads.add(new ZObject(points.get(2),points.get(3),points.get(6),points.get(7),co));
+        quads.add(new ZObject(points.get(1),points.get(0),points.get(4),points.get(5),co));
+        quads.add(new ZObject(points.get(3),points.get(1),points.get(5),points.get(7),co));
+        quads.add(new ZObject(points.get(5),points.get(4),points.get(6),points.get(7),co));
+        quads.add(new ZObject(points.get(2),points.get(0),points.get(4),points.get(6),co));
+        quads.add(new ZObject(points.get(1),points.get(0),points.get(2),points.get(3),co));
+        quads.add(new ZObject(points.get(3),points.get(2),points.get(6),points.get(7),co));
         
         return quads;
     }
