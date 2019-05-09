@@ -6,7 +6,7 @@ public class main{
         
         int planeWidth = 100; 
         int planeLength = 100;
-        int creaturesAtStart = 50;
+        int creaturesAtStart = 500;
         int environmentTemp = 60;
         int foodPerUpdate = 5;
         int foodWorth = 1;
