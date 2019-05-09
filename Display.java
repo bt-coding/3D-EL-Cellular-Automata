@@ -145,16 +145,18 @@ public class Display extends JComponent{
     }
     public void setOrganism(ArrayList<Organism> ao) {
         organisms=ao;
-        screenobjects = new ArrayList<ZObject>();
+        ArrayList<ZObject> tempscreenobjects = new ArrayList<ZObject>();
+        //screenobjects = new ArrayList<ZObject>();
         for(Organism o : ao) {
             ArrayList<ZObject> objs = Shapes.genCubeQuads(o.getX(), groundheight-1, o.getY(), o.getColor());
             for(ZObject z : objs) {
-                screenobjects.add(z);
+                tempscreenobjects.add(z);
             }
         }
-        screenobjects = MoveCamera(screenobjects, 'z', (int)(ylen/3));
-        screenobjects = MoveCamera(screenobjects, 'x', -(int)(xlen/2));
-        screenobjects = MoveCamera(screenobjects, 'y', 5);
+        tempscreenobjects = MoveCamera(tempscreenobjects, 'z', (int)(ylen/3));
+        tempscreenobjects = MoveCamera(tempscreenobjects, 'x', -(int)(xlen/2));
+        tempscreenobjects = MoveCamera(tempscreenobjects, 'y', 5);
+        screenobjects=tempscreenobjects;
     }
     public ArrayList<ZObject> MoveCamera(ArrayList<ZObject> objects, char dir, double dis) {
         ArrayList<ZObject> tempzobj = new ArrayList<ZObject>();

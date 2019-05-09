@@ -1,7 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 import java.util.*;
-public class life {
+public class lifeRandom {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Conway's Window");
         frame.setVisible(true);
@@ -9,19 +9,22 @@ public class life {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        Display d = new Display(55,100,Color.BLACK);
+        int width=75;
+        int height=75;
+        
+        Display d = new Display(height,width,Color.BLACK);
         frame.add(d);
         d.setVisible(true);
         
         
         int frametime = 100;
-        int[][] board = new int[55][100];
+        int[][] board = new int[height][width];
         //board[25][25]=1;
         //board[26][26]=1;
         //board[27][26]=1;
         //board[27][25]=1;
         //board[27][24]=1;
-        board[25][25]=1;
+        /*board[25][25]=1;
         board[26][25]=1;
         board[25][26]=1;
         board[26][26]=1;
@@ -56,7 +59,15 @@ public class life {
         board[23][59]=1;
         board[24][59]=1;
         board[23][60]=1;
-        board[24][60]=1;
+        board[24][60]=1;*/
+        for(int r=0;r<board.length;r++) {
+            for(int c=0;c<board[0].length;c++) {
+                if (Math.random()<.2) {
+                    board[r][c]=1;
+                }
+            }
+        }
+        
         for (int i=0;i<10000;i++) {
             int[][] temp = new int[board.length][board[0].length];
             for (int r=0;r<board.length;r++) {
