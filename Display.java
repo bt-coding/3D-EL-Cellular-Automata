@@ -15,7 +15,7 @@ public class Display extends JComponent{
     private final int ASPECT = 1;
     private final int WIDTH = 1920;
     private final int HEIGHT = 1080;
-    private final int groundheight = 4;
+    private final int groundheight = 10;
     private double degrees = 0;
     private ArrayList<ZObject> screenobjects;
     private ArrayList<ZObject> grnd;
@@ -33,7 +33,7 @@ public class Display extends JComponent{
         grnd = new ArrayList<ZObject>();
         ZObject ground = new ZObject(gp2,gp1,gp3,gp4,groundColor);
         grnd.add(ground);
-        grnd = MoveCamera(grnd, 'z', (int)(ylen));
+        grnd = MoveCamera(grnd, 'z', (int)(ylen/3));
         grnd = MoveCamera(grnd, 'x', -(int)(xlen/2));
         grnd = MoveCamera(grnd, 'y', 5);
         
@@ -83,6 +83,7 @@ public class Display extends JComponent{
         //project and actually display points
         
         ArrayList<ZObject> onscreen = spinCamera(degrees, screenobjects);
+        onscreen = tiltCamera(-40, onscreen);
         onscreen = ZBuffer.sortZ(onscreen);
         
         /*ArrayList<ZObject> withground = new ArrayList<ZObject>();
@@ -97,6 +98,7 @@ public class Display extends JComponent{
         screenobjects=withground;
         */
         ArrayList<ZObject> grnarr = spinCamera(degrees, grnd);
+        grnarr = tiltCamera(-40,grnarr);
         ZObject ground = grnarr.get(0);
         
         double[] oneprojg = Calculate.project2Ddouble(new double[]{ground.getQuad().getOne().getX(),ground.getQuad().getOne().getY(),ground.getQuad().getOne().getSpecialZ(),1},FOV,ASPECT,0.0,100.0);
@@ -105,16 +107,9 @@ public class Display extends JComponent{
         double[] fourprojg = Calculate.project2Ddouble(new double[]{ground.getQuad().getFour().getX(),ground.getQuad().getFour().getY(),ground.getQuad().getFour().getSpecialZ(),1},FOV,ASPECT,5.0,100.0);
         int[] xpg = new int[]{(int)(WIDTH*oneprojg[0]),(int)(WIDTH*twoprojg[0]),(int)(WIDTH*threeprojg[0]),(int)(WIDTH*fourprojg[0])};
         int[] ypg = new int[]{(int)(HEIGHT*oneprojg[1]),(int)(HEIGHT*twoprojg[1]),(int)(HEIGHT*threeprojg[1]),(int)(HEIGHT*fourprojg[1])};
-        //g.setColor(z.getQuad().getColor());
-        Graphics2D g2g=(Graphics2D)(g);
-        g2g.setPaint(new GradientPaint(WIDTH/2,HEIGHT,new Color(255,255,255,200),WIDTH/2, HEIGHT/2,ground.getQuad().getColor()));
-        //java.awt.Polygon p = new java.awt.Polygon();
-        //g.fillPolygon(xp,yp,4);
-        g2g.fill(new java.awt.Polygon(xpg,ypg,4));
-        Color w2g = new Color(255,255,255,20);
-        Color z2g = new Color(ground.getQuad().getColor().getRed(),ground.getQuad().getColor().getGreen(),ground.getQuad().getColor().getBlue(),20);
-        g2g.setPaint(new GradientPaint(WIDTH/2,HEIGHT,w2g,WIDTH/2, 0,z2g));
-        g2g.draw(new java.awt.Polygon(xpg,ypg,4));
+        g.setColor(groundColor);
+        g.fillPolygon(xpg,ypg,4);
+
         
         
         
@@ -129,6 +124,8 @@ public class Display extends JComponent{
                 int[] yp = new int[]{(int)(HEIGHT*oneproj[1]),(int)(HEIGHT*twoproj[1]),(int)(HEIGHT*threeproj[1])};
                 g.setColor(z.getPolygon().getColor());
                 g.fillPolygon(xp,yp,3);
+                g.setColor(Color.BLACK);
+                g.drawPolygon(xp,yp,3);
             } else if (z.getType().equals("Quad")) {
                 double[] oneproj = Calculate.project2Ddouble(new double[]{z.getQuad().getOne().getX(),z.getQuad().getOne().getY(),z.getQuad().getOne().getSpecialZ(),1},FOV,ASPECT,0.0,100.0);
                 double[] twoproj = Calculate.project2Ddouble(new double[]{z.getQuad().getTwo().getX(),z.getQuad().getTwo().getY(),z.getQuad().getTwo().getSpecialZ(),1},FOV,ASPECT,0.0,100.0);
@@ -138,6 +135,8 @@ public class Display extends JComponent{
                 int[] yp = new int[]{(int)(HEIGHT*oneproj[1]),(int)(HEIGHT*twoproj[1]),(int)(HEIGHT*threeproj[1]),(int)(HEIGHT*fourproj[1])};
                 g.setColor(z.getQuad().getColor());
                 g.fillPolygon(xp,yp,4);
+                g.setColor(Color.BLACK);
+                g.drawPolygon(xp,yp,4);
             }
         }
         
@@ -153,7 +152,7 @@ public class Display extends JComponent{
                 screenobjects.add(z);
             }
         }
-        screenobjects = MoveCamera(screenobjects, 'z', (int)(ylen));
+        screenobjects = MoveCamera(screenobjects, 'z', (int)(ylen/3));
         screenobjects = MoveCamera(screenobjects, 'x', -(int)(xlen/2));
         screenobjects = MoveCamera(screenobjects, 'y', 5);
     }
@@ -198,7 +197,7 @@ public class Display extends JComponent{
         double ydist=deg;
         //uble xdist=(int)(xlen/2)-10;
         double xdist=0;
-        double zdist=(int)(ylen/2)+ylen;
+        double zdist=(int)(ylen/2)+ylen/3;
         ArrayList<ZObject> tempzobj = new ArrayList<ZObject>();
         for(ZObject zo : objects) {
             if (zo.getType().equals("Quad")) {
@@ -215,6 +214,35 @@ public class Display extends JComponent{
                 double[] oreturned = Calculate.rotateDouble(new double[]{zo.getOne().getX()+xdist,zo.getOne().getY(),zo.getOne().getZ()-zdist,1}, 'y', deg);            
                 double[] twreturned = Calculate.rotateDouble(new double[]{zo.getTwo().getX()+xdist,zo.getTwo().getY(),zo.getTwo().getZ()-zdist,1}, 'y', deg);
                 double[] trreturned = Calculate.rotateDouble(new double[]{zo.getThree().getX()+xdist,zo.getThree().getY(),zo.getThree().getZ()-zdist,1}, 'y', deg);   
+                OtherPoint dpone = new OtherPoint(oreturned[0]-xdist,oreturned[1],oreturned[2]+zdist);
+                OtherPoint dptwo = new OtherPoint(twreturned[0]-xdist,twreturned[1],twreturned[2]+zdist);
+                OtherPoint dpthree = new OtherPoint(trreturned[0]-xdist,trreturned[1],trreturned[2]+zdist);
+                tempzobj.add(new ZObject(dpone,dptwo,dpthree,zo.getColor()));
+            }
+        }
+        return tempzobj;
+    }
+    public ArrayList<ZObject> tiltCamera(double deg, ArrayList<ZObject> objects) {
+        double ydist=deg;
+        //uble xdist=(int)(xlen/2)-10;
+        double xdist=0;
+        double zdist=(int)(ylen/2)+ylen/3;
+        ArrayList<ZObject> tempzobj = new ArrayList<ZObject>();
+        for(ZObject zo : objects) {
+            if (zo.getType().equals("Quad")) {
+                double[] oreturned = Calculate.rotateDouble(new double[]{zo.getOne().getX()+xdist,zo.getOne().getY(),zo.getOne().getZ()-zdist,1}, 'x', deg);            
+                double[] twreturned = Calculate.rotateDouble(new double[]{zo.getTwo().getX()+xdist,zo.getTwo().getY(),zo.getTwo().getZ()-zdist,1}, 'x', deg);
+                double[] trreturned = Calculate.rotateDouble(new double[]{zo.getThree().getX()+xdist,zo.getThree().getY(),zo.getThree().getZ()-zdist,1}, 'x', deg);   
+                double[] freturned = Calculate.rotateDouble(new double[]{zo.getFour().getX()+xdist,zo.getFour().getY(),zo.getFour().getZ()-zdist,1}, 'x', deg);
+                OtherPoint dpone = new OtherPoint(oreturned[0]-xdist,oreturned[1],oreturned[2]+zdist);
+                OtherPoint dptwo = new OtherPoint(twreturned[0]-xdist,twreturned[1],twreturned[2]+zdist);
+                OtherPoint dpthree = new OtherPoint(trreturned[0]-xdist,trreturned[1],trreturned[2]+zdist);
+                OtherPoint dpfour = new OtherPoint(freturned[0]-xdist,freturned[1],freturned[2]+zdist);
+                tempzobj.add(new ZObject(dpone,dptwo,dpthree,dpfour,zo.getColor(),zo.isTouched()));
+            } else if (zo.getType().equals("Polygon")) {
+                double[] oreturned = Calculate.rotateDouble(new double[]{zo.getOne().getX()+xdist,zo.getOne().getY(),zo.getOne().getZ()-zdist,1}, 'x', deg);            
+                double[] twreturned = Calculate.rotateDouble(new double[]{zo.getTwo().getX()+xdist,zo.getTwo().getY(),zo.getTwo().getZ()-zdist,1}, 'x', deg);
+                double[] trreturned = Calculate.rotateDouble(new double[]{zo.getThree().getX()+xdist,zo.getThree().getY(),zo.getThree().getZ()-zdist,1}, 'x', deg);   
                 OtherPoint dpone = new OtherPoint(oreturned[0]-xdist,oreturned[1],oreturned[2]+zdist);
                 OtherPoint dptwo = new OtherPoint(twreturned[0]-xdist,twreturned[1],twreturned[2]+zdist);
                 OtherPoint dpthree = new OtherPoint(trreturned[0]-xdist,trreturned[1],trreturned[2]+zdist);
