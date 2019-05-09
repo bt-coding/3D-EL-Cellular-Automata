@@ -9,15 +9,15 @@ public class lifeRandom {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        int width=75;
-        int height=75;
+        int width=250;
+        int height=250;
         
         Display d = new Display(height,width,Color.BLACK);
         frame.add(d);
         d.setVisible(true);
         
         
-        int frametime = 100;
+        int frametime = 50;
         int[][] board = new int[height][width];
         //board[25][25]=1;
         //board[26][26]=1;
@@ -62,13 +62,14 @@ public class lifeRandom {
         board[24][60]=1;*/
         for(int r=0;r<board.length;r++) {
             for(int c=0;c<board[0].length;c++) {
-                if (Math.random()<.2) {
+                if (Math.random()<.1) {
                     board[r][c]=1;
                 }
             }
         }
         
         for (int i=0;i<10000;i++) {
+            board[(int)(Math.random()*board.length)][(int)(Math.random()*board[0].length)]=1;
             int[][] temp = new int[board.length][board[0].length];
             for (int r=0;r<board.length;r++) {
                 for (int c=0;c<board[0].length;c++) {
@@ -116,7 +117,7 @@ public class lifeRandom {
                         //System.out.print("  ");
                     } else {
                         //System.out.print("O ");
-                        organisms.add(new Organism(r,c,Color.GREEN));
+                        organisms.add(new Organism(r,c,new Color((int)(((double)r/(double)board.length)*200)+55,(int)(((double)c/(double)board[0].length)*200)+55,(int)((((double)r*(double)c)/((double)board.length*(double)board[0].length))*255))));
                     }
                 }
                 System.out.println();
