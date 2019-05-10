@@ -96,8 +96,8 @@ public class life {
                     }
                 }
             }
-            System.out.println("FRAME: " + (i+1));
-            System.out.println("FRAME TIME: " + frametime);
+            //System.out.println("FRAME: " + (i+1));
+            //System.out.println("FRAME TIME: " + frametime);
             ArrayList<Organism> organisms = new ArrayList<Organism>();
             for(int r=0;r<board.length;r++) {
                 for(int c=0;c<board[0].length;c++) {

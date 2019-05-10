@@ -3,14 +3,28 @@ import javax.swing.*;
 import java.util.*;
 public class lifeRandom {
     public static void main(String[] args) {
+        int[] rules = new int[]{0,1,0,1,0,1,0,0,0};
+        int[] spawnrules = new int[]{0,0,1,0,0,0,0,0,0};
+        //rules is based on the amount of surrounding cells
+        
+        for(int i=0;i<rules.length;i++) {
+            rules[i]=(int)(Math.random()+.5);
+            //rules[i]=0;
+            //spawnrules[i]=(int)(Math.random()+.5);
+        }   
+        //spawnrules[2]=1;
+        //rules[1]=1;
+        
+        
+        
         JFrame frame = new JFrame("Conway's Window");
         frame.setVisible(true);
         frame.setSize(1920,1080);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        int width=250;
-        int height=250;
+        int width=100;
+        int height=100;
         
         Display d = new Display(height,width,Color.BLACK);
         frame.add(d);
@@ -60,16 +74,22 @@ public class lifeRandom {
         board[24][59]=1;
         board[23][60]=1;
         board[24][60]=1;*/
-        for(int r=0;r<board.length;r++) {
+        
+        /*for(int r=0;r<board.length;r++) {
             for(int c=0;c<board[0].length;c++) {
                 if (Math.random()<.1) {
                     board[r][c]=1;
                 }
             }
-        }
+        }*/
+        board[49][50]=1;
+        board[50][50]=1;
+        board[51][50]=1;
+        board[50][49]=1;
+        board[50][51]=1;
         
         for (int i=0;i<10000;i++) {
-            board[(int)(Math.random()*board.length)][(int)(Math.random()*board[0].length)]=1;
+            //board[(int)(Math.random()*board.length)][(int)(Math.random()*board[0].length)]=1;
             int[][] temp = new int[board.length][board[0].length];
             for (int r=0;r<board.length;r++) {
                 for (int c=0;c<board[0].length;c++) {
@@ -86,7 +106,7 @@ public class lifeRandom {
                             }
                         } //gets amount of neighbors
                         total--;
-                        if (total<2) {
+                        /*if (total<2) {
                             board[r][c]=0;
                         } //kill if too few neighbors
                         if (total==2||total==3) {
@@ -94,7 +114,8 @@ public class lifeRandom {
                         } //leave alive if good amt of neighbors
                         if (total>3) {
                             board[r][c]=0;
-                        } //kill if too many neighbors
+                        }*/ //kill if too many neighbors
+                        board[r][c]=rules[total];
                     } else if(board[r][c]==0) {
                         int total = 0;
                         for (int rr=r-1;rr<=r+1;rr++) {
@@ -102,14 +123,15 @@ public class lifeRandom {
                                 total+=temp[rr][cc];
                             }
                         } //amt of neigbors
-                        if (total==3) {
+                        /*if (total==3) {
                             board[r][c]=1;
-                        } //make alive if perfect amt of neighbors
+                        }*/ //make alive if perfect amt of neighbors
+                        board[r][c]=spawnrules[total];
                     }
                 }
             }
-            System.out.println("FRAME: " + (i+1));
-            System.out.println("FRAME TIME: " + frametime);
+            //System.out.println("FRAME: " + (i+1));
+            //System.out.println("FRAME TIME: " + frametime);
             ArrayList<Organism> organisms = new ArrayList<Organism>();
             for(int r=0;r<board.length;r++) {
                 for(int c=0;c<board[0].length;c++) {
