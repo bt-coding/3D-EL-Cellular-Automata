@@ -8,12 +8,14 @@ public class lifeRandom {
         //rules is based on the amount of surrounding cells
         
         for(int i=0;i<rules.length;i++) {
-            rules[i]=(int)(Math.random()+.5);
-            //rules[i]=0;
-            //spawnrules[i]=(int)(Math.random()+.5);
+            //rules[i]=(int)(Math.random()+.5);
+            rules[i]=0;
+            spawnrules[i]=(int)(Math.random()+.5);
         }   
-        //spawnrules[2]=1;
-        //rules[1]=1;
+        spawnrules[2]=1;
+        rules[1]=1;
+        spawnrules[0]=0;
+        spawnrules[1]=0;
         
         
         
@@ -31,7 +33,7 @@ public class lifeRandom {
         d.setVisible(true);
         
         
-        int frametime = 50;
+        int frametime = 100;
         int[][] board = new int[height][width];
         //board[25][25]=1;
         //board[26][26]=1;
@@ -75,20 +77,45 @@ public class lifeRandom {
         board[23][60]=1;
         board[24][60]=1;*/
         
-        /*for(int r=0;r<board.length;r++) {
+        for(int r=0;r<board.length;r++) {
             for(int c=0;c<board[0].length;c++) {
-                if (Math.random()<.1) {
+                if (Math.random()<.01) {
                     board[r][c]=1;
                 }
             }
-        }*/
-        board[49][50]=1;
+        }
+        /*board[49][50]=1;
         board[50][50]=1;
         board[51][50]=1;
         board[50][49]=1;
         board[50][51]=1;
-        
+        */
         for (int i=0;i<10000;i++) {
+            if (i%50==0) {
+                for(int i2=0;i2<rules.length;i2++) {
+                    //rules[i]=(int)(Math.random()+.5);
+                    rules[i2]=0;
+                    spawnrules[i2]=(int)(Math.random()+.5);
+                }   
+                spawnrules[2]=1;
+                rules[1]=1;
+                spawnrules[0]=0;
+                spawnrules[1]=0;
+                for(int r=0;r<board.length;r++) {
+                    for(int c=0;c<board[0].length;c++) {
+                        board[r][c]=0;
+                    }
+                }
+                for(int r=0;r<board.length;r++) {
+                    for(int c=0;c<board[0].length;c++) {
+                        if (Math.random()<.01) {
+                            board[r][c]=1;
+                        }
+                    }
+                }
+            }
+            
+            
             //board[(int)(Math.random()*board.length)][(int)(Math.random()*board[0].length)]=1;
             int[][] temp = new int[board.length][board[0].length];
             for (int r=0;r<board.length;r++) {
