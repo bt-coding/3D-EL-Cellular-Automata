@@ -15,7 +15,7 @@ public class main{
         int foodWorth = 1;
         int foodAtStart = 20;
         
-        Display screen = new Display(planeWidth,planeLength,Color.GREEN);
+        Display screen = new Display(planeWidth,planeLength,Color.GREEN,frame);
         frame.add(screen);
         
         CreatureManager creatureManager = new CreatureManager(creaturesAtStart,planeWidth,planeWidth,screen);

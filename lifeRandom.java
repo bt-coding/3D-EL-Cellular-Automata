@@ -1,9 +1,12 @@
 import java.awt.*;
 import javax.swing.*;
 import java.util.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.ImageIO;
 public class lifeRandom {
     public static void main(String[] args) {
-        int[] rules = new int[]{0,1,0,1,0,1,0,0,0};
+        int[] rules = new int[]{0,0,1,1,0,0,0,0,0};
         int[] spawnrules = new int[]{0,0,1,0,0,0,0,0,0};
         //rules is based on the amount of surrounding cells
         
@@ -25,10 +28,10 @@ public class lifeRandom {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        int width=100;
-        int height=100;
+        int width=300;
+        int height=300;
         
-        Display d = new Display(height,width,Color.BLACK);
+        Display d = new Display(height,width,Color.BLACK,frame);
         frame.add(d);
         d.setVisible(true);
         
@@ -94,7 +97,7 @@ public class lifeRandom {
             if (i%50==0) {
                 for(int i2=0;i2<rules.length;i2++) {
                     //rules[i]=(int)(Math.random()+.5);
-                    rules[i2]=0;
+                    rules[i2]=(int)(Math.random()+.5);
                     spawnrules[i2]=(int)(Math.random()+.5);
                 }   
                 spawnrules[2]=1;
@@ -174,7 +177,19 @@ public class lifeRandom {
             d.setOrganism(organisms);
             
             try {
-                Thread.sleep(frametime);
+                BufferedImage img = new BufferedImage(frame.getWidth(),frame.getHeight(),BufferedImage.TYPE_INT_RGB);
+                frame.paint(img.getGraphics());
+                d.addRotate();
+                File outfile = new File(d.framenum+".png");
+                ImageIO.write(img,"png",outfile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            
+            
+            try {
+                //Thread.sleep(frametime);
             } catch (Exception e) {
                 e.printStackTrace();
             } //WAIT

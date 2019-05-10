@@ -9,7 +9,7 @@ public class life {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        Display d = new Display(55,100,Color.BLACK);
+        Display d = new Display(55,100,Color.BLACK,frame);
         frame.add(d);
         d.setVisible(true);
         

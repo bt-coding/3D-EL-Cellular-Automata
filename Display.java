@@ -1,6 +1,9 @@
 import java.awt.*;
 import javax.swing.*;
 import java.util.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.ImageIO;
 public class Display extends JComponent{
     private ArrayList<Organism> organisms;
     private int xlen;
@@ -19,7 +22,9 @@ public class Display extends JComponent{
     private double degrees = 0;
     private ArrayList<ZObject> screenobjects;
     private ArrayList<ZObject> grnd;
-    public Display(int xl, int yl, Color gc){
+    public int framenum;
+    public JFrame frame;
+    public Display(int xl, int yl, Color gc, JFrame fr){
         organisms = new ArrayList<Organism>();
         xlen=xl;
         ylen=yl;
@@ -36,16 +41,23 @@ public class Display extends JComponent{
         grnd = MoveCamera(grnd, 'z', (int)(ylen/3));
         grnd = MoveCamera(grnd, 'x', -(int)(xlen/2));
         grnd = MoveCamera(grnd, 'y', 5);
+        framenum=0;
+        frame=fr;
         
         (new Thread(new FrameThread(60,this))).start();
     }
     public void redraw(){
         super.repaint();
-    }   
+    }
+    public void addRotate() {
+        degrees+=.005;
+        framenum++;
+    }
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         //degrees+=.005;
-        degrees+=.005;
+        //degrees+=.005;
+        //framenum++;
         
         //ArrayList<ZObject> screenobjects = new ArrayList<ZObject>();
         
@@ -141,6 +153,31 @@ public class Display extends JComponent{
         }
         
         //display variable and debug text on screen
+        /*try {
+            Point p = this.getLocationOnScreen();
+        
+            Robot robot = new Robot();
+            Rectangle rect = new Rectangle(p.x,p.y,1920,1080);
+            
+            BufferedImage img = robot.createScreenCapture(rect);
+            
+            File imageFile = new File(frame+".png");
+            
+            ImageIO.write(img, "jpeg", imageFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        
+        /*try {
+            BufferedImage img = new BufferedImage(frame.getWidth(),frame.getHeight(),BufferedImage.TYPE_INT_RGB);
+            frame.paint(img.getGraphics());
+            File outfile = new File(framenum+".png");
+            ImageIO.write(img,"png",outfile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        
+        
         
     }
     public void setOrganism(ArrayList<Organism> ao) {

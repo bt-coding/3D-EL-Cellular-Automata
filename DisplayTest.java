@@ -8,7 +8,7 @@ public class DisplayTest {
         frame.setSize(1920,1080);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Display d = new Display(50,50,Color.GREEN);
+        Display d = new Display(50,50,Color.GREEN,frame);
         frame.add(d);
         d.setVisible(true);
         ArrayList<Organism> organismsample = new ArrayList<Organism>();
