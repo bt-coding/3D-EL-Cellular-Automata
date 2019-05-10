@@ -8,6 +8,7 @@ public class Creature{
     double foodDesire;
     int[] loc;
     Color color;
+    String species;
     public Creature(double a, double pm, double d, double f,int[] l, double fd){
         energy = 20;
         aggression = a;
@@ -21,26 +22,28 @@ public class Creature{
     public Color calulateColor(){
         return new Color((int)(255*foodDesire),(int)(255*aggression),(int)(255*packMantality));
     }
-    //0 == nothing, 1 == food, 2 == enemy, 3 == teammate
+    //-1 == no floor 0 == nothing, 1 == food, 2 == enemy, 3 == teammate
     public int[] move(int[] inputs){
         double[] decision = new double[inputs.length-2];
         double total = 0;
         for(int a = 1; a < inputs.length-1; a++){
-            if(inputs[a] == 1){
-                decision[a-1] += foodDesire;
-                total += foodDesire;
-            }
-            if(inputs[a+1] != 2 && inputs[a] != 2 && inputs[a-1] != 2){
-                decision[a-1] += fear;
-                total += fear;
-            }
-            if(inputs[a-1] == 3 || inputs[a+1] == 3){
-                decision[a-1] += packMantality;
-                total += packMantality;
-            }
-            if(inputs[a] == 2){
-                decision[a-1] += aggression;
-                total += aggression;
+            if(decision[a] != -1){
+                if(inputs[a] == 1){
+                    decision[a-1] += foodDesire;
+                    total += foodDesire;
+                }
+                if(inputs[a+1] != 2 && inputs[a] != 2 && inputs[a-1] != 2){
+                    decision[a-1] += fear;
+                    total += fear;
+                }
+                if(inputs[a-1] == 3 || inputs[a+1] == 3){
+                    decision[a-1] += packMantality;
+                    total += packMantality;
+                }
+                if(inputs[a] == 2){
+                    decision[a-1] += aggression;
+                    total += aggression;
+                }
             }
         }
         for(int a = 0; a < decision.length; a++){

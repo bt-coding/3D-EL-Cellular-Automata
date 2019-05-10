@@ -5,6 +5,7 @@ public class CreatureManager{
     int width;
     int length;
     Display dis;
+    ArrayList<int[]> food;
     public CreatureManager(int cas,int w, int l, Display d){
         dis=d;
         creatures = new ArrayList<Creature>();
@@ -18,6 +19,9 @@ public class CreatureManager{
         }
         dis.setOrganism(temporgs);
         dis.redraw();
+    }
+    public void setFood(ArrayList<int[]> f){
+        food = f;
     }
     public void resetCreatures(){
         for(int a = 0; a < creaturesAtStart; a++){
@@ -37,5 +41,19 @@ public class CreatureManager{
             }
         }   
         return false;
+    }
+    /*
+    public int[] getInputs(Creature c){
+        int[] vals = new int[8];
+        for(int a = 1; a < vals.length-1; a++){
+            if(){
+                
+            }
+        }
+        return vals;
+    }
+    */
+    public void update(){
+        
     }
 }

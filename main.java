@@ -1,5 +1,8 @@
 import java.awt.*;
+import java.awt.image.*;
 import javax.swing.*;
+import java.io.*;
+import javax.imageio.*;
 public class main{
     public static void main(String[] args){
         JFrame frame = new JFrame("3D Cellular Automata");
@@ -22,5 +25,17 @@ public class main{
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        //saves the screen
+        /*
+        BufferedImage img = new BufferedImage(frame.getWidth(), frame.getHeight(), BufferedImage.TYPE_INT_RGB);
+        frame.paint(img.getGraphics());
+        File outputfile = new File("saved.png");
+        try{
+            ImageIO.write(img, "png", outputfile);
+        }
+        catch(Exception e){
+            System.out.print(e);
+        }
+        */
     }
 }
