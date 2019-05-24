@@ -23,10 +23,12 @@ public class lifeRandom2D {
         
         
         JFrame frame = new JFrame("Conway's Window");
+        frame.setUndecorated(true);
         frame.setVisible(true);
         frame.setSize(1920,1080);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
         
         int width=200;
         int height=200;
@@ -93,7 +95,15 @@ public class lifeRandom2D {
         board[50][49]=1;
         board[50][51]=1;
         */
+        int[][] lastboard = new int[height][width];
         for (int i=0;i<10000;i++) {
+            //lastboard=board;
+            for(int r=0;r<board.length;r++) {
+                for(int c=0;c<board[0].length;c++) {
+                    lastboard[r][c]=board[r][c];
+                }
+            }
+            
             if (i%50==0) {
                 for(int i2=0;i2<rules.length;i2++) {
                     //rules[i]=(int)(Math.random()+.5);
@@ -111,11 +121,12 @@ public class lifeRandom2D {
                 }
                 for(int r=0;r<board.length;r++) {
                     for(int c=0;c<board[0].length;c++) {
-                        if (Math.random()<.01) {
+                        if (Math.random()<.0003) {
                             board[r][c]=1;
                         }
                     }
                 }
+                //board[(int)(Math.random()*board.length)][(int)(Math.random()*board[0].length)]=1;
             }
             
             
@@ -159,6 +170,7 @@ public class lifeRandom2D {
                         board[r][c]=spawnrules[total];
                     }
                 }
+                
             }
             //System.out.println("FRAME: " + (i+1));
             //System.out.println("FRAME TIME: " + frametime);
@@ -172,9 +184,9 @@ public class lifeRandom2D {
                         organisms.add(new Organism(r,c,new Color((int)(((double)r/(double)board.length)*200)+55,(int)(((double)c/(double)board[0].length)*200)+55,(int)((((double)r*(double)c)/((double)board.length*(double)board[0].length))*255))));
                     }
                 }
-                System.out.println();
-            } //FRAME DRAW
-            d.setOrganism(organisms);
+                //System.out.println();
+            } //FRAME DRAW 
+            d.setOrganism(organisms,rules,spawnrules);
             
             /*try {
                 BufferedImage img = new BufferedImage(frame.getWidth(),frame.getHeight(),BufferedImage.TYPE_INT_RGB);
@@ -185,7 +197,18 @@ public class lifeRandom2D {
             } catch (Exception e) {
                 e.printStackTrace();
             }*/
-            
+            boolean diff = false;
+            for(int r=0;r<board.length;r++) {
+                for(int c=0;c<board.length;c++) {
+                    if (board[r][c]!=lastboard[r][c] | diff) {
+                        diff=true;
+                        break;
+                    }
+                }
+            }
+            if (!diff) {
+                continue;
+            }
             
             
             try {
